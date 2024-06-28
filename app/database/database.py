@@ -2,12 +2,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv, find_dotenv
-from os import environ
+import os 
 
 if find_dotenv():
     load_dotenv()
-    DB_PATH = environ.get('DB_URL')
-
+    
+else:
+    exit()
+DB_PATH = os.getenv('DB_PATH')
 
 Base = declarative_base()
 
