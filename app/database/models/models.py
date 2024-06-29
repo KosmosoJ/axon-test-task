@@ -31,9 +31,11 @@ class Product(Base):
 
     id = Column(Integer, autoincrement=True, index=True, primary_key=True)
     product_id = Column(String)
-    lot_number = (Integer, ForeignKey('tasks.lot_number'))
+    task_id = Column(Integer, ForeignKey('tasks.id'), default=None)
     # lot_number_r = relationship('Task', foreign_keys=[lot_number])
-    lot_date = (Date, ForeignKey('tasks.lot_date'))
+    
+    is_aggregated = Column(Boolean, default=False)
+    aggregated_at = Column(TIMESTAMP(timezone=True))
     # lot_date_r = relationship('Task', foreign_keys=[lot_date])
 
     # task = relationship('Task', back_populates='products', primaryjoin='Product.lot_number == Task.lot_number')
