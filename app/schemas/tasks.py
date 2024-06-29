@@ -18,4 +18,3 @@ class TaskModel(BaseModel):
     shift_end:datetime = Field(alias='ДатаВремяОкончанияСмены', validation_alias='ДатаВремяОкончанияСмены')
     
 
-    
