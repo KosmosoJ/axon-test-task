@@ -9,7 +9,7 @@ if find_dotenv():
     
 else:
     exit()
-DB_PATH = os.getenv('DB_PATH')
+DB_PATH = os.getenv('DATABASE_URL') if os.getenv('DATABASE_URL') else os.getenv('DB_PATH')
 
 Base = declarative_base()
 
