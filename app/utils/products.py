@@ -24,8 +24,8 @@ async def create_product(product_info:ProductCorp, session:AsyncSession):
     await session.commit()
     return new_product
 
-async def aggregate_product_and_task(task_id:int, product_id:int, session:AsyncSession):
-    product = await session.execute(select(Product).where(Product.id == product_id))
+async def aggregate_product_and_task(task_id:int, product_id:str, session:AsyncSession):
+    product = await session.execute(select(Product).where(Product.product_id == product_id))
     product = product.scalars().first()
 
     if not product:
