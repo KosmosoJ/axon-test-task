@@ -17,7 +17,7 @@ class Task(Base):
     shift = Column(String, comment='Смена')
     crew = Column(String, comment='Бригада')
     lot_number = Column(Integer, comment='Номер партии')
-    lot_date = Column(TIMESTAMP(timezone=True), comment='Дата партии')
+    lot_date = Column(Date, comment='Дата партии')
     name = Column(String, comment='Номенклатура')
     codeEKN = Column(String, comment='кодЕКН')
     DC_id = Column(String, comment='идентификатор РЦ ')

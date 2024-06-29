@@ -5,8 +5,6 @@ from database.models.models import Task
 from datetime import datetime
 
 
-
-
 async def create_task(task_info:TaskModel, session:AsyncSession):
     check_lot = await session.execute(select(Task).where(Task.lot_number == task_info.lot_number))
     check_lot = check_lot.scalars().first()
@@ -31,4 +29,9 @@ async def create_task(task_info:TaskModel, session:AsyncSession):
     await session.commit()
     return task 
 
-
+async def get_task(task_id:int, session:AsyncSession):
+    task = await session.execute(select(Task).where(Task.id == task_id))
+    task = task.scalars().first()
+    if not task:
+        return None
+    return task

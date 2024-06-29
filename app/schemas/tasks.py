@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, AliasPath
+from pydantic import BaseModel, Field, AliasPath, AliasChoices
 from datetime import  date, datetime
 
 
@@ -14,7 +14,7 @@ class TaskModel(BaseModel):
     name:str = Field(alias='Номенклатура', validation_alias='Номенклатура')
     codeEKN:str = Field(alias='КодЕКН', validation_alias='КодЕКН')
     DC_id:str = Field(alias='ИдентификаторРЦ', validation_alias='ИдентификаторРЦ')
-    shift_start:datetime = Field(alias='ДатаВремяНачалаСмены', validation_alias='ДатаВремяНачалаСмены')
+    shift_start:datetime= Field(alias='ДатаВремяНачалаСмены', validation_alias='ДатаВремяНачалаСмены')
     shift_end:datetime = Field(alias='ДатаВремяОкончанияСмены', validation_alias='ДатаВремяОкончанияСмены')
     
 
