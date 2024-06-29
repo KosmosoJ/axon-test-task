@@ -10,10 +10,16 @@ router = APIRouter()
 
 @router.post('/product')
 async def create_product(product_info:ProductCorp, session:AsyncSession=Depends(get_session)):
+    """ 
+    Путь для создания продукта /api/product 
+    """
     product = await products_utils.create_product(product_info, session)
     return product
 
 @router.put('/product')
 async def aggreagate_product(product_id:str, task_id:int, session:AsyncSession = Depends(get_session)):
+    """
+    Путь для агрегации продукта и смены /api/product
+    """
     product = await products_utils.aggregate_product_and_task(task_id=task_id, product_id=product_id, session=session)
     return product

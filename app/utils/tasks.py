@@ -7,6 +7,10 @@ from datetime import datetime
 
 
 async def insert_info_in_task(task:Task, task_info:TaskModel):
+    """ 
+    Функция для обноления информации в смене 
+    """
+
     task.close_status = task_info.close
     task.task = task_info.task
     if not task.closed_at and task_info.close:
@@ -27,6 +31,11 @@ async def insert_info_in_task(task:Task, task_info:TaskModel):
     return task 
 
 async def create_task(task_info:TaskModel, session:AsyncSession):
+    """ 
+    Создание смены 
+
+    Провяеряется существует ли смена, если да - то перезаписывает старую информацию новой, иначе создает новую смену
+    """
     check_lot = await session.execute(select(Task).where(and_(Task.lot_number == task_info.lot_number, Task.lot_date == task_info.lot_date)))
     check_lot = check_lot.scalars().first()
     if check_lot:
@@ -54,13 +63,22 @@ async def create_task(task_info:TaskModel, session:AsyncSession):
     return task 
 
 async def get_task(task_id:int, session:AsyncSession):
+    """
+    Получение смены по ID
+    """
     task = await session.execute(select(Task).where(Task.id == task_id))
     task = task.scalars().first()
     if not task:
-        return None
+        raise HTTPException(status_code=404, detail=f"Задание с id '{id}' не найдено")
     return task
 
 async def get_filter_task(crew:str, shift:str, lot_number:int, lot_date:str, codeEKN:str, close_status:bool, offset,limit:int, session:AsyncSession):
+    """
+    Получение смен по фильтру с пагинацией
+    Дефолтные значения - offest:1 limit:10
+
+    """
+
     if lot_date:
         lot_date = datetime.strptime(lot_date.replace('.', '-').replace(',','-'), '%d-%m-%Y').date()
     result = await session.execute(select(Task).offset((offset -1)*limit).filter(or_(Task.crew == crew, Task.shift == shift,
@@ -74,6 +92,9 @@ async def get_filter_task(crew:str, shift:str, lot_number:int, lot_date:str, cod
     return result 
 
 async def edit_task(task_id:int, task_info:TaskModel, session:AsyncSession):
+    """
+    Обновление информации в смене
+    """
     task = await session.execute(select(Task).where(Task.id == task_id))
     task = task.scalars().first()
     if not task:

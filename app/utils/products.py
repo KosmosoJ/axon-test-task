@@ -8,6 +8,12 @@ from datetime import datetime
 
 
 async def create_product(product_info:ProductCorp, session:AsyncSession):
+    """ 
+    Создание продукта в базе данных 
+
+    Проверяется - существует указанный идентификатор продукта в бд, если нет -> error 400
+    Существует ли указанная смена в бд, если нет -> error 404
+    """
     product = await session.execute(select(Product).where(Product.product_id == product_info.product_id))
     product = product.scalars().first()
     if product:
@@ -25,6 +31,14 @@ async def create_product(product_info:ProductCorp, session:AsyncSession):
     return new_product
 
 async def aggregate_product_and_task(task_id:int, product_id:str, session:AsyncSession):
+    """
+    Агрегация продукта и смены
+
+    Проверяется - существует ли указанный продукт в бд, если нет -> error 404
+    Связаны ли продукт и смена, если нет -> error 400 
+    Агрегирован продукт, если да -> error 400 
+    """
+
     product = await session.execute(select(Product).where(Product.product_id == product_id))
     product = product.scalars().first()
 
