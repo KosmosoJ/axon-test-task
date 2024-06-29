@@ -47,6 +47,6 @@ async def post_task(task_info:tasks.TaskModel, session:AsyncSession = Depends(ge
     return task_info
 
 @router.put('/task/{task_id}')
-async def put_task(task_id:int, task_info:tasks.TaskModel, session:AsyncSession = Depends(get_session)):
+async def put_task(task_id:int,task_info:tasks.TaskModel, session:AsyncSession = Depends(get_session)):
     task = await task_utils.edit_task(task_id=task_id, task_info=task_info, session=session)
     return task 

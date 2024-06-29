@@ -6,23 +6,25 @@ from database.models.models import Task
 from datetime import datetime
 
 
-async def insert_info_in_task(task:Task, task_info:TaskModel,time:bool = False):
-    request = update(Task).where(Task.id == task.id).values(
-        close_status = task_info.close,
-        task = task_info.task,
-        closed_at = datetime.now() if time else None,
-        work_center = '1',
-        shift = task_info.shift,
-        crew = task_info.crew,
-        lot_number = task_info.lot_number,
-        lot_date = task_info.lot_date,
-        name = task_info.name,
-        codeEKN = task_info.codeEKN,
-        DC_id = task_info.DC_id,
-        shift_start = task_info.shift_start,
-        shift_end = task_info.shift_end
-    )
-    return request
+async def insert_info_in_task(task:Task, task_info:TaskModel):
+    task.close_status = task_info.close
+    task.task = task_info.task
+    if not task.closed_at and task_info.close:
+        task.closed_at = datetime.now()
+    elif not task_info.close:
+        task.closed_at = None
+    task.work_center = '1'
+    task.shift = task_info.shift
+    task.crew = task_info.crew
+    task.lot_number = task_info.lot_number
+    task.lot_date = task_info.lot_date
+    task.name = task_info.name
+    task.codeEKN = task_info.codeEKN
+    task.DC_id = task_info.DC_id
+    task.shift_start = task_info.shift_start
+    task.shift_end = task_info.shift_end
+    
+    return task 
 
 async def create_task(task_info:TaskModel, session:AsyncSession):
     check_lot = await session.execute(select(Task).where(and_(Task.lot_number == task_info.lot_number, Task.lot_date == task_info.lot_date)))
@@ -71,12 +73,12 @@ async def get_filter_task(crew:str, shift:str, lot_number:int, lot_date:str, cod
         raise HTTPException(status_code=404, detail='Not found')
     return result 
 
-async def edit_task(task_id:int,task_info:TaskModel, session:AsyncSession):
+async def edit_task(task_id:int, task_info:TaskModel, session:AsyncSession):
     task = await session.execute(select(Task).where(Task.id == task_id))
     task = task.scalars().first()
     if not task:
         raise HTTPException(404, 'Not found')
-    edited_task = await session.execute(await insert_info_in_task(task,task_info, True))
+    task = await insert_info_in_task(task,task_info)
     await session.commit()
     return task
 
