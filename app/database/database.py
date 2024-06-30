@@ -4,12 +4,15 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv, find_dotenv
 import os 
 
-if find_dotenv():
-    load_dotenv()
+# if find_dotenv():
+#     load_dotenv()
     
+# else:
+#     exit()
+if os.getenv('DB_PATH'):
+    DB_PATH = os.getenv('DB_PATH')
 else:
-    exit()
-DB_PATH = os.getenv('DATABASE_URL') if os.getenv('DATABASE_URL') else os.getenv('DB_PATH')
+    DB_PATH = os.getenv('DATABASE_URL')
 
 Base = declarative_base()
 
